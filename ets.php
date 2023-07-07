@@ -345,7 +345,7 @@ class _ets
 	function store_node(&$elts, $ptype, &$i, &$line, $cname, $cvalue, $ncontent, $content, $code = FALSE)
 	{
 		$isabsolute = FALSE;
-		if ($cname{0} == '/' && $cname{1} == '/') {
+		if ($cname[0] == '/' && $cname[1] == '/') {
 			$isabsolute = TRUE;
 			$cname = substr($cname, 2);
 		}
@@ -383,7 +383,7 @@ class _ets
 	function store_leaf(&$elts, $ptype, &$i, $cname, $cvalue = NULL)
 	{
 		$isabsolute = FALSE;
-		if ($cname{0} == '/' && $cname{1} == '/') {
+		if ($cname[0] == '/' && $cname[1] == '/') {
 			$isabsolute = TRUE;
 			$cname = substr($cname, 2);
 		}
@@ -446,8 +446,8 @@ class _ets
 			}
 
 			// current character and following
-			$c0 = $content{$i};
-			$c1 = $content{$i + 1};
+			$c0 = $content[$i];
+			$c1 = $content[$i + 1];
 			$is_space0 = $this->is_space($c0);
 			$a0 = ord($c0);
 
@@ -462,12 +462,12 @@ class _ets
 				// tag?
 				if ($c0 == '{') {
 
-					$c2 = $content{$i + 2};
-					$c3 = $content{$i + 3};
-					$c4 = $content{$i + 4};
-					$c5 = $content{$i + 5};
-					$c6 = $content{$i + 6};
-					$c7 = $content{$i + 7};
+					$c2 = $content[$i + 2];
+					$c3 = $content[$i + 3];
+					$c4 = $content[$i + 4];
+					$c5 = $content[$i + 5];
+					$c6 = $content[$i + 6];
+					$c7 = $content[$i + 7];
 
 					// {* (comment)
 					if ($c1 == '*') {
@@ -623,7 +623,7 @@ class _ets
 						}
 
 					// {include:
-					} elseif ($c1 == 'i' && $c2 == 'n' && $c3 == 'c' && $c4 == 'l' && $c5 == 'u' && $c6 == 'd' && $c7 == 'e' & $content{$i + 8} == ':') {
+					} elseif ($c1 == 'i' && $c2 == 'n' && $c3 == 'c' && $c4 == 'l' && $c5 == 'u' && $c6 == 'd' && $c7 == 'e' & $content[$i + 8] == ':') {
 						if ($ptype & _ETS_GROUP2) {
 							$this->error(0, 12, 'include element', $line, $ptype);
 							$this->skip = TRUE;
@@ -1429,7 +1429,7 @@ class _ets
 				$fct = $this->cache_read_name;
 				if ($envelope = $fct($this->container)) {
 					// the cache is a valid envelope
-					if (isset($envelope) && $envelope{0} == 'E' && $envelope{1} == 'T' && $envelope{2} == 'S' && $envelope{3} == "\1") {
+					if (isset($envelope) && $envelope[0] == 'E' && $envelope[1] == 'T' && $envelope[2] == 'S' && $envelope[3] == "\1") {
 						$masktree = unserialize(substr($envelope, 4));
 						// the envelope contains valid templates
 						if ($masktree && is_array($masktree)) {
@@ -1468,7 +1468,9 @@ class _ets
 					return FALSE;
 				}
 				$this->containers[$container] = TRUE;
-				return $this->parse($parse, $i = 0, $line = 1, strlen($content), "$content       ");
+				$i = 0;
+				$line = 1;
+				return $this->parse($parse, $i, $line, strlen($content), "$content       ");
 			}
 
 		// .. or not
@@ -2156,7 +2158,7 @@ class _ets
     /**
      * Contructor: create the template tree
      */
-	function _ets($containers, $hsr, $hcr, $hcw)
+	function __construct($containers, $hsr, $hcr, $hcw)
 	{
 		$this->source_read_name = $hsr;
 		$this->cache_read_name  = $hcr;
